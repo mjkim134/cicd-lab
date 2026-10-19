@@ -67,3 +67,19 @@ jobs:
           tags: |
             ${{ steps.img.outputs.name }}:main
             ${{ steps.img.outputs.name }}:${{ github.sha }}
+
+  deploy-dev:
+    needs: push
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - name: image 변경, 커밋 & 푸시
+        run: |
+          kustomize edit set image todo-web=ghcr.io/${GITHUB_REPOSITORY,,}/web:${GITHUB_SHA}
+          git config user.name mjkim134
+          git config user.email mjkim134@naver.com
+          git add deploy/overlays/dev/kustomization.yaml
+          git commit -m "update web image to ${GITHUB_SHA}"
+          git push
