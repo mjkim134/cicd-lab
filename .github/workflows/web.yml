@@ -79,8 +79,10 @@ jobs:
         run: |
           cd deploy/overlays/dev
           kustomize edit set image todo-web=ghcr.io/${GITHUB_REPOSITORY,,}/web:${GITHUB_SHA}
+          
           git config user.name mjkim134
           git config user.email mjkim134@naver.com
-          git add deploy/overlays/dev/kustomization.yaml
+          
+          git add kustomization.yaml
           git commit -m "update web image to ${GITHUB_SHA}"
           git push
